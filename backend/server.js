@@ -17,6 +17,7 @@ app.use(express.urlencoded({extended: false}))
 
 app.use('/api/productos', require('./routes/productosRoutes'));
 app.use('/api/pedidos', require('./routes/pedidosRoutes'));
+app.use('/api/forms', require('./routes/formsRoutes'));
 
 app.use(errorHandler);
 
