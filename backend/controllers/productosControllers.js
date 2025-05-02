@@ -21,25 +21,24 @@ const createProducto = asyncHandler(async (req, res) => {
 });
 
 const updateProducto = asyncHandler(async (req, res) => {
-    const producto = await Producto.findById(req.params.id);
+    const producto = await Producto.findOne({sku: req.params.sku});
     if (!producto) {
         res.status(404);
-        throw new Error('Producto no encontrado');
-    }
+        throw new Error('Producto no encontrado');}
 
-    const productoActualizado = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const productoActualizado = await Producto.findOneAndUpdate({sku: req.params.sku}, req.body,{new: true});
     res.status(200).json(productoActualizado);
 });
 
 const deleteProducto = asyncHandler(async (req, res) => {
-    const producto = await Producto.findById(req.params.id);
+    const producto = await Producto.findOne({sku: req.params.sku});
     if (!producto) {
         res.status(404);
         throw new Error('Producto no encontrado');
     }
 
     await producto.deleteOne();
-    res.status(200).json({ id: req.params.id });
+    res.status(200).json({sku: req.params.skus});
 });
 
 module.exports = { getProductos, createProducto, updateProducto, deleteProducto};

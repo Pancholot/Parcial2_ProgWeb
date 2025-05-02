@@ -6,7 +6,7 @@ router.route('/')
     .get(getProductos)
     .post(createProducto);
 
-router.route('/:id')
+router.route('/:sku')
     .put(updateProducto)
     .delete(deleteProducto);
 
