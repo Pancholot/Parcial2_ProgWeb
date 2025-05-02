@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { procesarPedido } = require('../controllers/pedidosControllers');
+const {getPedidos, procesarPedido } = require('../controllers/pedidosControllers');
 
-router.put('/procesar', procesarPedido);
+router.route('/')
+    .get(getPedidos)
+    .put(procesarPedido);
 
 module.exports = router;

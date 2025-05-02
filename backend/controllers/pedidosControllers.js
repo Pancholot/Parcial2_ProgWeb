@@ -2,6 +2,11 @@ const asyncHandler = require('express-async-handler');
 const Producto = require('../models/productosModel');
 const Pedido = require('../models/pedidosModel'); 
 
+const getPedidos = asyncHandler(async (req, res) => {
+    const pedidos = await Pedido.find();
+    res.status(200).json(pedidos);
+});
+
 const procesarPedido = asyncHandler(async (req, res) => {
     const { productos } = req.body;
 
@@ -39,4 +44,4 @@ const procesarPedido = asyncHandler(async (req, res) => {
     res.status(200).json({ mensaje: 'Pedido procesado y stock actualizado correctamente' });
 });
 
-module.exports = {procesarPedido};
+module.exports = {procesarPedido, getPedidos};
