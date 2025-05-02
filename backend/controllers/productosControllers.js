@@ -37,8 +37,10 @@ const deleteProducto = asyncHandler(async (req, res) => {
         throw new Error('Producto no encontrado');
     }
 
+    const skuEliminado = producto.sku; 
+
     await producto.deleteOne();
-    res.status(200).json({sku: req.params.skus});
+    res.status(200).json({mensaje: `Producto con SKU ${skuEliminado} eliminado correctamente`});
 });
 
-module.exports = { getProductos, createProducto, updateProducto, deleteProducto};
+module.exports = {getProductos, createProducto, updateProducto, deleteProducto};
