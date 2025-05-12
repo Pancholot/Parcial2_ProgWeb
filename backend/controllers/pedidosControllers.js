@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const Producto = require('../models/productosModel');
-const Pedido = require('../models/pedidosModel'); 
+const Pedido = require('../models/pedidosModel');
+const Notificacion = require('../models/notificacionModel');
+const { emailSender } = require('../config/email');
 
 const getPedidos = asyncHandler(async (req, res) => {
     const pedidos = await Pedido.find();
@@ -32,6 +34,29 @@ const procesarPedido = asyncHandler(async (req, res) => {
 
         producto.cantidad -= item.cantidad;
         await producto.save();
+
+        if (producto.cantidad <= producto.puntoReorden) {
+            const mensaje = `El producto ${producto.nombre} (SKU: ${producto.sku}) alcanzó o bajó su punto de reorden. Cantidad actual: ${producto.cantidad}`;
+
+            const yaExiste = await Notificacion.findOne({
+                productoSku: producto.sku,
+                atendido: false
+            });
+
+            if (!yaExiste) {
+                await Notificacion.create({
+                    productoSku: producto.sku,
+                    mensaje
+                });
+
+                await emailSender({
+                    from: process.env.Correo,
+                    to: process.env.Correo,
+                    subject: `⚠️ Alerta de inventario bajo: ${producto.nombre}`,
+                    text: mensaje
+                });
+            }
+        }
     }
 
     if (errores.length > 0) {
@@ -44,4 +69,4 @@ const procesarPedido = asyncHandler(async (req, res) => {
     res.status(200).json({ mensaje: 'Pedido procesado y stock actualizado correctamente' });
 });
 
-module.exports = {procesarPedido, getPedidos};
+module.exports = { procesarPedido, getPedidos };

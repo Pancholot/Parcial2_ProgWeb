@@ -26,7 +26,11 @@ const productoSchema = mongoose.Schema({
         type: Number,
         required: true,
         trim:true
-    }
+    },
+    puntoReorden: { 
+        type: Number, 
+        required: true, 
+        trim:true }
 }, {
     timestamps: true
 });
